@@ -1,15 +1,19 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { X, Search } from 'lucide-react';
 import { archiveItems } from '../data/archive-items';
 import { historicalStages } from '../data/historical-stages';
 import type { ArchiveItem } from '../data/types';
 import { MechanismArt } from './MechanismArt';
 export function Archive({onOpen}:{onOpen:(item:ArchiveItem)=>void}) {
- const [stage,setStage]=useState('all'); const [medium,setMedium]=useState('all'); const [query,setQuery]=useState('');
+ const location=useLocation(); const [params,setParams]=useSearchParams();
+ const [stage,setStage]=useState(params.get('stage')||location.state?.stage||'all'); const [medium,setMedium]=useState(params.get('medium')||'all'); const [query,setQuery]=useState(params.get('q')||'');
+ useEffect(()=>{const next=new URLSearchParams();if(stage!=='all')next.set('stage',stage);if(medium!=='all')next.set('medium',medium);if(query)next.set('q',query);setParams(next,{replace:true});},[stage,medium,query,setParams]);
  const visible=archiveItems.filter(i=>(stage==='all'||i.historicalPeriod===stage)&&(medium==='all'||i.medium===medium)&&`${i.title} ${i.context}`.toLowerCase().includes(query.toLowerCase()));
- return <section className="section" id="archive"><div className="section-heading"><div><span className="eyebrow">THE RESEARCH COLLECTION</span><h2>Digital archive<span className="accent">.</span></h2></div><p>Look closer at the objects, systems, and institutions through which information travels.</p></div>
+ return <section className="section" id="archive"><div className="section-heading"><div><span className="eyebrow">THE RESEARCH COLLECTION</span><h1>Digital archive<span className="accent">.</span></h1></div><p>Browse records by period, medium, or keyword. Each entry is a research placeholder until its evidence is verified.</p></div>
  <div className="filters"><label>Historical stage<select value={stage} onChange={e=>setStage(e.target.value)}><option value="all">All six stages</option>{historicalStages.map(s=><option key={s.id} value={s.id}>{s.title}</option>)}</select></label><label>Medium<select value={medium} onChange={e=>setMedium(e.target.value)}><option value="all">All media</option>{archiveItems.map(i=><option key={i.id}>{i.medium}</option>)}</select></label><label className="search-label">Search collection<div className="search-input"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find an object or mechanism"/></div></label></div>
- <p className="small muted" aria-live="polite">{visible.length} research slots · Primary evidence pending</p><div className="archive-grid">{visible.map(i=><button className="archive-card" key={i.id} onClick={()=>onOpen(i)}><div className="archive-image"><MechanismArt variant={archiveItems.indexOf(i)}/><span className="image-label">CONCEPTUAL DIAGRAM</span></div><div className="archive-body"><div className="card-meta"><span>{i.medium}</span><span>To be verified</span></div><h3>{i.title}</h3><p>{historicalStages.find(s=>s.id===i.historicalPeriod)?.title}</p><span className="text-link">Open research slot <span>＋</span></span></div></button>)}</div>{!visible.length&&<div className="empty-state">No research slots match these filters. Try another stage or medium.</div>}</section>;
+ <p className="small muted" aria-live="polite">{visible.length} research slots · Primary evidence pending</p><ol className="archive-list">{visible.map(i=><li key={i.id}><Link className="archive-row" to={`/archive/${i.id}`} state={{background:location,archiveState:location.state,scrollY:window.scrollY}}><span className="archive-row-title">{i.title}</span><span>{i.date}</span><span>{i.medium}</span><span>{historicalStages.find(s=>s.id===i.historicalPeriod)?.title}</span><span className="archive-row-summary">{i.context}</span><span className="list-open">Details</span></Link></li>)}</ol>{!visible.length&&<div className="empty-state">No research slots match these filters. Try another stage or medium.</div>}</section>;
 }
 export function ArchiveDialog({item,onClose}:{item:ArchiveItem|null;onClose:()=>void}) {
  const ref=useRef<HTMLDialogElement>(null);
