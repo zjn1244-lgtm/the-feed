@@ -31,7 +31,7 @@ nav a{font-size:14px}.button{font-size:14px}label,select,.search-input input,leg
 @media(max-width:580px){nav a{font-size:14px}.stage-card{padding:18px 13px;min-height:290px}.stage-card-bottom{font-size:11px}.stage-period{font-size:12px}.feed-story-meta{font-size:12px}.hero-actions .button{font-size:12px}.section-heading>p{font-size:15px}}
 
 /* Classical museum palette and contemporary editorial surfaces. */
-:root{--paper:#F5F1E9;--surface:#eee8de;--ink:#252320;--muted:#625c54;--accent:#682F35;--line:#d8d0c3;--dark:#44282A;--gold:#B49A70;--serif:'Instrument Serif',Georgia,serif;--sans:'DM Sans',Arial,sans-serif;--mono:'IBM Plex Mono',monospace}
+:root{--paper:#F5F1E9;--surface:#eee8de;--ink:#252320;--muted:#625c54;--accent:#682F35;--line:#d8d0c3;--dark:#44282A;--gold:#B49A70;--gold-ink:#746042;--serif:Georgia,'Times New Roman',serif;--sans:'DM Sans',Arial,sans-serif;--mono:'IBM Plex Mono',monospace}
 body{background:var(--paper);color:var(--ink)}
 .site-header{border-bottom-color:var(--line);background:var(--paper)}
 .wordmark svg,.wordmark{color:var(--accent)}
@@ -79,3 +79,53 @@ dialog{border-radius:0;border-color:var(--gold);box-shadow:0 18px 70px rgba(37,3
 @media(prefers-reduced-motion:reduce){.feed-list li{animation:none}.stage-list a,.archive-row,.event-row,.comparison-controls .chip{transition:none}}
 @media(max-width:800px){.site-header{height:78px}.site-header nav{top:77px}.site-header nav a{font-size:14px}}
 @media(max-width:580px){.site-header nav{display:none;position:absolute;top:77px;left:0;right:0;background:var(--paper);border-bottom:1px solid var(--line);padding:14px var(--space);flex-direction:column;align-items:stretch;gap:0}.site-header nav.open{display:flex}.site-header nav a{display:block;padding:13px 4px;min-height:48px;border-bottom:1px solid var(--line)}.site-header nav a[aria-current="page"]::after{bottom:6px;right:auto;width:34px}}
+
+/* Museum catalogue surfaces: image space stays 4:3 even while records are pending. */
+.eyebrow{color:var(--accent)}
+.overview-copy .eyebrow{color:var(--accent)}
+.stage-index,.event-date{color:var(--gold-ink)}
+.overview-entry-link{display:inline-flex;gap:18px;align-items:center;border-bottom:1px solid var(--gold);padding:8px 0 10px;color:var(--accent);font-size:14px;text-decoration:none;transition:gap .2s ease}
+.overview-entry-link:hover{gap:24px}
+.overview-figure{border-top:1px solid var(--gold);padding-top:16px;animation:exhibit-arrive .5s ease-out both}
+.overview-figure-heading{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.overview-figure-heading .mono{font-size:10px;letter-spacing:.07em;color:var(--muted)}
+.overview-copy{animation:exhibit-arrive .5s ease-out both}
+@keyframes exhibit-arrive{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.archive-museum-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 24px;margin:28px 0 0;padding:0;list-style:none;border:0}
+.archive-museum-item{min-width:0}
+.archive-museum-link{display:flex;height:100%;flex-direction:column;align-items:flex-start;color:var(--ink);text-decoration:none}
+.archive-thumb{display:block;position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--surface);border:1px solid var(--line);transition:border-color .2s ease}
+.archive-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.archive-thumb-empty{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:13px;line-height:1.45;text-align:center}
+.archive-thumb-mark{font-family:var(--serif);font-size:34px;line-height:1;color:var(--gold-ink)}
+.archive-thumb-ratio{position:absolute;right:9px;top:9px;padding:3px 6px;background:var(--paper);color:var(--muted);font:10px var(--mono)}
+.archive-museum-meta{display:flex;justify-content:space-between;gap:12px;width:100%;margin-top:15px;color:var(--muted);font:10px var(--mono);letter-spacing:.035em;text-transform:uppercase}
+.archive-museum-title{font:26px/1.12 var(--serif);margin-top:9px;max-width:22ch}
+.archive-museum-period,.archive-museum-source{margin-top:7px;color:var(--muted);font-size:13px;line-height:1.45}
+.archive-museum-source{font-size:12px}
+.archive-museum-open{display:flex;align-items:center;gap:7px;margin-top:auto;padding-top:15px;color:var(--accent);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+.archive-museum-link:hover .archive-thumb{border-color:var(--accent)}
+.archive-museum-link:hover .archive-museum-open{gap:11px}
+.archive-museum-open{transition:gap .2s ease}
+.archive-detail{max-width:1000px}
+.archive-detail>.back-link{appearance:none;border:0;background:none;padding:0;font:inherit;text-align:left;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.archive-detail-deck{max-width:62ch;font-size:17px;line-height:1.65;margin:18px 0 32px}
+.archive-detail-figure{margin:0 0 36px;padding:0 0 12px;border-bottom:1px solid var(--gold)}
+.archive-detail-figure>a{display:block;background:var(--surface);text-align:center}
+.archive-detail-figure img{display:block;width:100%;max-height:76vh;margin:0 auto;object-fit:contain}
+.archive-detail-figure figcaption{padding-top:10px;color:var(--muted);font-size:12px}
+.archive-detail-image-empty>div{aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:var(--surface);color:var(--muted);font-size:14px}
+.archive-detail-metadata{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px 26px;margin-bottom:36px;border-color:var(--gold)}
+.archive-detail-metadata dd{font-size:14px;line-height:1.45}
+.archive-detail .record-section{max-width:72ch;padding:24px 0}
+.archive-detail .record-section>.eyebrow{margin-bottom:12px}
+.archive-detail .record-section h2{margin:0 0 12px}
+.archive-detail .record-section h3{font:16px var(--sans);margin:20px 0 6px}
+.archive-detail .record-section p{font-size:16px;line-height:1.7}
+.archive-detail-source{max-width:72ch;margin-top:22px;padding:22px 0;border-top:1px solid var(--gold)}
+.archive-detail-source a{display:inline-flex;gap:10px;margin-top:12px;color:var(--accent)}
+.archive-detail-source p{margin:12px 0 0;font-size:14px}
+.archive-detail:focus{outline:none}
+@media(max-width:800px){.archive-museum-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 18px}.archive-detail-metadata{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.archive-museum-grid{grid-template-columns:1fr;gap:28px}.archive-museum-title{font-size:25px}.overview-figure-heading{align-items:flex-start;flex-direction:column;gap:5px}.archive-detail-metadata{grid-template-columns:1fr 1fr;gap:16px}.archive-detail-deck{font-size:15px}.archive-detail .record-section p{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.overview-copy,.overview-figure{animation:none}.overview-entry-link,.archive-museum-open{transition:none}}

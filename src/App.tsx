@@ -80,9 +80,10 @@ function OverviewPage() {
         <h1>The Feed We Didn't<br/><em>Choose.</em></h1>
         <p className="hero-subtitle">A Media Archaeology of Information Distribution</p>
         <p className="hero-description">How have material systems, institutions, and intermediaries shaped what gets copied, circulated, and made visible?</p>
+        <Link to="/archive" className="overview-entry-link">Explore the research collection <span aria-hidden="true">↗</span></Link>
         <p className="small muted">A qualitative research project · School of Creative Media, City University of Hong Kong</p>
       </div>
-      <figure className="overview-figure"><MechanismArt hero/><figcaption>Conceptual model of production, selection, and distribution. It is a research prompt, not archival evidence.</figcaption></figure>
+      <figure className="overview-figure"><div className="overview-figure-heading"><span className="eyebrow">EXHIBITION GUIDE · 01—06</span><span className="mono small">PRODUCE / SELECT / CIRCULATE</span></div><MechanismArt hero/><figcaption>Researcher's conceptual model of production, selection, and distribution. It is an original diagram, not archival evidence.</figcaption></figure>
     </section>
     <section className="section overview-index">
       <div className="section-heading"><div><span className="eyebrow">CATALOGUE</span><h2>Six routes through the research<span className="accent">.</span></h2></div><p>Enter by period or follow a mechanism across overlapping histories.</p></div>
@@ -98,12 +99,17 @@ function ArchivePage() {
   const detailId = location.pathname.split('/')[2];
   const item = archiveItems.find(record => record.id === detailId) ?? null;
   const background = (location.state as { background?: Location; archiveState?: unknown; scrollY?: number } | null)?.background;
-  const close = () => navigate(background ?? '/archive', { state: background ? location.state?.archiveState : undefined });
+  const close = () => { if (background) navigate(-1); else navigate('/archive'); };
   return <>{detailId && item ? <ArchiveDetail item={item} onClose={close}/> : <Archive onOpen={() => {}}/>}</>;
 }
 
 function ArchiveDetail({item,onClose}:{item:ArchiveItem;onClose:()=>void}) {
-  return <article className="section archive-detail"><Link to="/archive" onClick={onClose} className="back-link">← Back to archive</Link><span className="eyebrow">UNVERIFIED RESEARCH SLOT</span><h1>{item.title}</h1><dl className="metadata"><div><dt>Date</dt><dd>{item.date}</dd></div><div><dt>Medium</dt><dd>{item.medium}</dd></div><div><dt>Institution</dt><dd>{item.institution}</dd></div></dl>{[['Historical context',item.context],['Evidence',item.evidence],['Research interpretation',item.interpretation],['Limitations',item.limitations],['Image & rights',item.imageRights]].map(([heading,body])=><section className="record-section" key={heading}><h2>{heading}</h2><p>{body}</p></section>)}{item.sourceUrl ? <a href={item.sourceUrl} target="_blank" rel="noreferrer">Original source</a> : <p className="notice">Original source link pending.</p>}</article>;
+  const stage = historicalStages.find(candidate => candidate.id === item.historicalPeriod);
+  return <article className="section archive-detail"><button type="button" onClick={onClose} className="back-link">← Back to archive</button><span className="eyebrow">{item.verificationStatus==='verified'?'VERIFIED RECORD':'RESEARCH PLACEHOLDER · NOT VERIFIED'}</span><h1>{item.title}</h1><p className="archive-detail-deck">This record separates supplied historical description from the project's interpretation. Missing evidence and image fields are shown as pending.</p>
+    {item.imageUrl ? <figure className="archive-detail-figure"><a href={item.imageUrl} target="_blank" rel="noreferrer" aria-label={`Open full image for ${item.title} in a new tab`}><img src={item.imageUrl} alt={item.title} /></a><figcaption>{item.imageRights || 'Image rights information pending.'}</figcaption></figure> : <figure className="archive-detail-figure archive-detail-image-empty"><div><span className="archive-thumb-mark" aria-hidden="true">∅</span><span>No archival image supplied</span></div><figcaption>Image and rights details are pending; no image is presented as historical evidence.</figcaption></figure>}
+    <dl className="metadata archive-detail-metadata"><div><dt>Date / period</dt><dd>{item.date}</dd></div><div><dt>Historical stage</dt><dd>{stage?.title ?? 'Period pending'}</dd></div><div><dt>Medium</dt><dd>{item.medium}</dd></div><div><dt>Institution / source institution</dt><dd>{item.institution}</dd></div><div><dt>Verification</dt><dd>{item.verificationStatus}</dd></div><div><dt>Citation</dt><dd>{item.citation || 'Citation details pending verification.'}</dd></div></dl>
+    <section className="record-section"><span className="eyebrow">RECORD DESCRIPTION</span><h2>Historical context</h2><p>{item.context}</p></section><section className="record-section"><span className="eyebrow">EVIDENCE REGISTER</span><h2>Evidence</h2><p>{item.evidence}</p></section><section className="record-section"><span className="eyebrow">PROJECT ANALYSIS</span><h2>Research interpretation</h2><p>{item.interpretation}</p></section><section className="record-section"><span className="eyebrow">SCOPE & PROVENANCE</span><h2>Limitations</h2><p>{item.limitations}</p><h3>Image rights</h3><p>{item.imageRights}</p></section>
+    <div className="archive-detail-source"><span className="eyebrow">ORIGINAL SOURCE</span>{item.sourceUrl ? <a href={item.sourceUrl} target="_blank" rel="noreferrer">Open source record <span aria-hidden="true">↗</span></a> : <p>Source URL pending. This placeholder is not a citable historical record.</p>}</div></article>;
 }
 
 function TimelinePage() { return <Timeline onOpen={() => {}}/>; }
