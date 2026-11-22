@@ -77,7 +77,7 @@ function OverviewPage() {
     <section className="overview-editorial">
       <div className="overview-copy">
         <span className="eyebrow"><span className="red-square"/> MEDIA ARCHAEOLOGY / INFORMATION DISTRIBUTION</span>
-        <h1>The Feed We<br/><em>Didn't Choose.</em></h1>
+        <h1>The Feed We Didn't<br/><em>Choose.</em></h1>
         <p className="hero-subtitle">A Media Archaeology of Information Distribution</p>
         <p className="hero-description">How have material systems, institutions, and intermediaries shaped what gets copied, circulated, and made visible?</p>
         <p className="small muted">A qualitative research project · School of Creative Media, City University of Hong Kong</p>
