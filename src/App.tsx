@@ -1,154 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, Route, Routes, useLocation, useNavigate, useNavigationType } from 'react-router-dom';
-import { Menu, X, Asterisk } from 'lucide-react';
+import { ZipExhibition } from './components/ZipExhibition';
+import { ZipLab } from './components/ZipLab';
 import { Archive } from './components/Archive';
 import { Timeline } from './components/Timeline';
 import { DistributionPaths } from './components/DistributionPaths';
-import { FeedLab } from './components/FeedLab';
-import { Exhibition } from './components/Exhibition';
-import { StageLab } from './components/StageLab';
-import { historicalStages } from './data/historical-stages';
-import { archiveItems } from './data/archive-items';
 import { researchChapters } from './data/research-chapters';
 import { references } from './data/references';
-import type { ArchiveItem } from './data/types';
 
-const navigation = [
-  { label: 'Home', to: '/' },
-  { label: 'Exhibition', to: '/exhibition' },
-  { label: 'Lab', to: '/lab' },
-  { label: 'Reflections', to: '/reflections' },
-];
-
-const positions = new Map<string, number>();
-
-function ScrollManager() {
-  const { pathname, key } = useLocation();
-  const navigationType = useNavigationType();
-
-  useEffect(() => {
-    if (navigationType === 'POP' && positions.has(key)) {
-      window.scrollTo(0, positions.get(key) ?? 0);
-    } else {
-      window.scrollTo(0, 0);
-    }
-  }, [key, navigationType, pathname]);
-
-  useEffect(() => {
-    const save = () => positions.set(key, window.scrollY);
-    window.addEventListener('scroll', save, { passive: true });
-    return () => window.removeEventListener('scroll', save);
-  }, [key]);
-
-  return null;
-}
-
-function SiteLayout() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => setMenuOpen(false), [location.pathname]);
-
-  return <>
-    <ScrollManager />
-    <a className="skip-link" href="#main">Skip to content</a>
-    <header className="site-header">
-      <Link to="/" className="wordmark" aria-label="The Feed We Didn't Choose home">
-        <Asterisk size={30} strokeWidth={1.5}/><span>THE FEED<br/>WE DIDN'T CHOOSE</span>
-      </Link>
-      <button className="icon-button menu-toggle" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X/> : <Menu/>}</button>
-      <nav aria-label="Catalogue" className={menuOpen ? 'open' : ''}>
-        {navigation.map(item => <NavLink key={item.to} to={item.to} end={item.to === '/'} onClick={() => setMenuOpen(false)}>{item.label}</NavLink>)}
-      </nav>
-      <span className="header-tag">SM5335 · CITYUHK</span>
-    </header>
-    <main id="main"><Outlet /></main>
-    <footer className="site-footer">
-      <div><Asterisk size={35}/><h2>The feed is a choice.<br/><em>Whose choice?</em></h2></div>
-      <div><span className="eyebrow">THE FEED WE DIDN'T CHOOSE</span><p>A Media Archaeology of Information Distribution</p><span className="small">SM5335 · School of Creative Media · CityUHK</span></div>
-      <Link to="/">Back to the beginning ↑</Link>
-    </footer>
-  </>;
-}
-
-function OverviewPage() {
-  const opening = researchChapters.find((chapter) => chapter.id === 'opening');
-  const press = archiveItems.find((item) => item.id === 'archive-early-mass');
-  return <>
-    <section className="home-title-block"><span className="eyebrow">SM5335 · MULTIMEDIA RESEARCH ESSAY · CITYUHK</span><h1>The Feed We Didn't <em>Choose</em></h1><p>A Media Archaeology of Information Distribution</p></section>
-    <section className="home-opening">
-      <div className="home-opening-copy"><span className="eyebrow">OPENING · WHO CHOOSES WHAT WE SEE?</span>{opening?.paragraphs?.map((paragraph, index) => <p key={index}>{paragraph}</p>)}<Link className="text-link" to="/research#chapter-opening">Read the full opening and source notes <span aria-hidden="true">↗</span></Link></div>
-      <figure className="home-opening-image">{press?.imageUrl ? <img src={press.imageUrl} alt="A printing press displayed at the Gutenberg Museum in Mainz; the photograph was made in 2019"/> : <div className="exhibition-image-empty">Image awaiting source review</div>}<figcaption><span className="eyebrow">A LATER VIEW OF PRINT HISTORY</span><br/>Printing press on display at the Gutenberg Museum, photographed in 2019. This is a contemporary museum photograph, not a fifteenth-century image. <Link to="/archive/archive-early-mass">Open source record ↗</Link></figcaption></figure>
-    </section>
-    <section className="home-question"><span className="eyebrow">THE RESEARCH QUESTION</span><h2>Who chooses what circulates, what appears first, and what remains visible?</h2><p>The essay follows recurring decisions across different media arrangements without treating them as steps in an inevitable technical evolution.</p></section>
-    <section className="section home-stage-index"><div className="section-heading"><div><span className="eyebrow">EXHIBITION GUIDE · 01—06</span><h2>Six media situations<span className="accent">.</span></h2></div><p>Explore the essays as overlapping histories, or move directly to a stage experiment.</p></div><ol className="stage-list">{historicalStages.map((stage, index) => <li key={stage.id}><Link to={'/lab?stage=' + stage.id}><span className="stage-index">{String(index + 1).padStart(2, '0')}</span><span className="stage-title">{stage.title}</span><span className="stage-period">{stage.period}</span><span className="stage-mechanism">{stage.mechanism}</span><span className="list-open">Enter lab ↗</span></Link></li>)}</ol><Link className="text-link" to="/exhibition">Explore the Exhibition index and archive materials <span aria-hidden="true">→</span></Link></section>
-    <section className="home-source-notes"><span className="eyebrow">OPENING · FIGURE CAPTIONS FROM THE ESSAY</span><ul>{opening?.mediaCaptions?.map((caption, index) => <li key={index}>{caption}</li>)}</ul><p className="small muted">The document supplied figure captions and source references, but not the corresponding original image files. Images are not recreated here.</p></section>
-  </>;
-}
-
-function ArchivePage() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const detailId = location.pathname.split('/')[2];
-  const item = archiveItems.find(record => record.id === detailId) ?? null;
-  const background = (location.state as { background?: Location; archiveState?: unknown; scrollY?: number } | null)?.background;
-  const close = () => { if (background) navigate(-1); else navigate('/archive'); };
-  return <>{detailId && item ? <ArchiveDetail item={item} onClose={close}/> : <Archive onOpen={() => {}}/>}</>;
-}
-
-function ArchiveDetail({item,onClose}:{item:ArchiveItem;onClose:()=>void}) {
-  const stage = historicalStages.find(candidate => candidate.id === item.historicalPeriod);
-  return <article className="section archive-detail"><button type="button" onClick={onClose} className="back-link">← Back to archive</button><span className="eyebrow">{item.verificationStatus==='verified'?'SOURCE METADATA CHECKED':'SOURCE METADATA PENDING'}</span><h1>{item.title}</h1><p className="archive-detail-deck">This record separates the source's description from the project's interpretation. Verification applies to the cited source metadata; it does not establish every historical claim or the authenticity of a depicted object.</p>
-    {item.imageUrl ? <figure className="archive-detail-figure"><a href={item.imageUrl} target="_blank" rel="noreferrer" aria-label={`Open full image for ${item.title} in a new tab`}><img src={item.imageUrl} alt={item.title} /></a><figcaption>{item.imageRights || 'Image rights information pending.'}{item.imageRightsUrl&&<> <a href={item.imageRightsUrl} target="_blank" rel="noreferrer">View license terms ↗</a></>}</figcaption></figure> : <figure className="archive-detail-figure archive-detail-image-empty"><div><span className="archive-thumb-mark" aria-hidden="true">∅</span><span>No image attached to this record</span></div><figcaption>{item.imageRights}</figcaption></figure>}
-    <dl className="metadata archive-detail-metadata"><div><dt>Date / period</dt><dd>{item.date}</dd></div><div><dt>Historical stage</dt><dd>{stage?.title ?? 'Period pending'}</dd></div><div><dt>Medium</dt><dd>{item.medium}</dd></div><div><dt>Institution / source institution</dt><dd>{item.institution}</dd></div><div><dt>Verification</dt><dd>{item.verificationStatus}</dd></div><div><dt>Citation</dt><dd>{item.citation || 'Citation details pending verification.'}</dd></div></dl>
-    <section className="record-section"><span className="eyebrow">RECORD DESCRIPTION</span><h2>Historical context</h2><p>{item.context}</p></section><section className="record-section"><span className="eyebrow">EVIDENCE REGISTER</span><h2>Evidence</h2><p>{item.evidence}</p></section><section className="record-section"><span className="eyebrow">PROJECT ANALYSIS</span><h2>Research interpretation</h2><p>{item.interpretation}</p></section><section className="record-section"><span className="eyebrow">SCOPE & PROVENANCE</span><h2>Limitations</h2><p>{item.limitations}</p><h3>Image rights</h3><p>{item.imageRights}</p></section>
-    <div className="archive-detail-source"><span className="eyebrow">ORIGINAL SOURCE</span>{item.sourceUrl ? <a href={item.sourceUrl} target="_blank" rel="noreferrer">Open source record <span aria-hidden="true">↗</span></a> : <p>Source URL pending. This placeholder is not a citable historical record.</p>}</div></article>;
-}
-
-function TimelinePage() { return <Timeline/>; }
-function DistributionPage() { return <DistributionPaths/>; }
-function FeedLabPage() { return <><StageLab/><FeedLab/></>; }
-
-function ReflectionsPage() {
-  const chapters = researchChapters.filter((chapter) => chapter.id === 'chapter-7' || chapter.id === 'conclusion');
-  return <section className="section reflections-page"><header className="section-heading"><div><span className="eyebrow">REFLECTIONS · CHAPTER 7 + CONCLUSION</span><h1>Who controls the feed?<span className="accent">.</span></h1></div><p>The closing argument returns to questions of selection, defaults, portability, and institutional power.</p></header>
-    <div className="reflections-reading">{chapters.map((chapter) => <article className="essay-chapter" id={'chapter-' + chapter.id} key={chapter.id}><span className="eyebrow">{chapter.id === 'chapter-7' ? 'SYNTHESIS' : 'CONCLUSION'}</span><h2>{chapter.title}</h2>{chapter.paragraphs?.map((paragraph, index) => <p key={index}>{paragraph}</p>)}<CitationList citations={chapter.citations ?? []}/></article>)}</div>
-    <Link className="text-link" to="/research">Read the complete essay and references <span aria-hidden="true">↗</span></Link>
-  </section>;
-}
-
-function CitationList({ citations }: { citations: string[] }) {
-  if (!citations.length) return null;
-  return <details className="citation-list"><summary>Chapter references ({citations.length})</summary><ol>{citations.map((citation, index) => {const url = citation.match(/https?:\/\/\S+/)?.[0];const text = url ? citation.replace(url, '').trim() : citation;return <li key={index}>{text}{url && <> <a href={url} target="_blank" rel="noreferrer">Open source ↗</a></>}</li>;})}</ol></details>;
-}
-
-function ResearchPage() {
-  const wordCount = researchChapters.flatMap((chapter) => chapter.paragraphs ?? []).join(' ').trim().split(/\s+/).filter(Boolean).length;
-  return <section className="section research-section">
-    <div className="section-heading"><div><span className="eyebrow">THE COMPLETE ESSAY · AUTHOR-SUPPLIED DRAFT</span><h1>Research essay<span className="accent">.</span></h1></div><p>SM5335 Multimedia Research Essay<br/>School of Creative Media, CityUHK</p></div>
-    <p className="research-import-note">Transcribed from the supplied Google Doc. Essay text: approximately {wordCount.toLocaleString()} words, excluding captions and references. Bibliography entries are included as supplied and have not been independently verified in this interface.</p>
-    <div className="research-layout"><aside><span className="eyebrow">ESSAY CONTENTS</span>{researchChapters.map(chapter => <a key={chapter.id} href={'#chapter-' + chapter.id}>{chapter.title}</a>)}<a href="#references">References</a></aside>
-      <div>{researchChapters.map(chapter => <article className="essay-chapter" id={'chapter-' + chapter.id} key={chapter.id}><span className="eyebrow">{chapter.id === 'opening' ? 'OPENING' : chapter.id === 'chapter-7' || chapter.id === 'conclusion' ? 'CLOSING ARGUMENT' : 'CHAPTER'}</span><h2>{chapter.title}</h2>{chapter.paragraphs?.map((paragraph, index) => <p key={index}>{paragraph}</p>)}{chapter.mediaCaptions?.length ? <details className="caption-register"><summary>Figure and media captions ({chapter.mediaCaptions.length})</summary><ol>{chapter.mediaCaptions.map((caption, index) => <li key={index}>{caption}</li>)}</ol><p className="small muted">Only image files already present in the project are displayed. Other figure and video assets were not transferred from the document.</p></details> : null}<CitationList citations={chapter.citations ?? []}/></article>)}
-        <article className="essay-chapter" id="references"><span className="eyebrow">SOURCE REGISTER · {references.length} UNIQUE LINKS</span><h2>References</h2><ol className="full-reference-list">{references.map(reference => <li key={reference.id}>{reference.citation?.replace(reference.url, '').trim() ?? reference.title} <a href={reference.url} target="_blank" rel="noreferrer">Open source ↗</a></li>)}</ol></article>
-      </div>
-    </div>
-  </section>;
-}
-
-function NotFoundPage() { return <section className="section"><h1>Page not found</h1><Link to="/">Return to Overview</Link></section>; }
-
-export default function App() {
-  return <Routes><Route element={<SiteLayout/>}>
-    <Route path="/" element={<OverviewPage/>}/>
-    <Route path="/exhibition" element={<Exhibition/>}/>
-    <Route path="/archive" element={<ArchivePage/>}/>
-    <Route path="/archive/:recordId" element={<ArchivePage/>}/>
-    <Route path="/timeline" element={<TimelinePage/>}/>
-    <Route path="/distribution-paths" element={<DistributionPage/>}/>
-    <Route path="/feed-lab" element={<FeedLabPage/>}/>
-    <Route path="/lab" element={<FeedLabPage/>}/>
-    <Route path="/reflections" element={<ReflectionsPage/>}/>
-    <Route path="/research" element={<ResearchPage/>}/>
-    <Route path="*" element={<NotFoundPage/>}/>
-  </Route></Routes>;
-}
+const nav=[['Home','/'],['Exhibition','/exhibition'],['Lab','/lab'],['Reflections','/reflections']] as const;
+const positions=new Map<string,number>();
+function ScrollManager(){const {key}=useLocation();const type=useNavigationType();useEffect(()=>{window.scrollTo(0,type==='POP'?(positions.get(key)??0):0)},[key,type]);useEffect(()=>{const save=()=>positions.set(key,window.scrollY);addEventListener('scroll',save,{passive:true});return()=>removeEventListener('scroll',save)},[key]);return null}
+function Layout(){const location=useLocation();return <><ScrollManager/><header className="site-nav"><div className="wrap nav-in"><Link className="logo" to="/" aria-label="The Feed We Didn't Choose, Home"><span aria-hidden="true" className="logo-symbol">F</span><span className="logo-copy">THE FEED WE DIDN’T CHOOSE<small>AN EXHIBITION OF INFORMATION</small></span></Link><nav aria-label="Main navigation" className="nav-links">{nav.map(([label,to])=><NavLink key={to} to={to} end={to==='/' }>{label}</NavLink>)}</nav><div className="nav-tag">SM5335 · 2026</div></div></header><main><Outlet/></main><aside aria-label="Continue exploring" className="page-switcher"><div className="wrap"><span className="eyebrow">THE FEED WE DIDN’T CHOOSE / DIGITAL EXHIBITION</span><Link to={location.pathname==='/reflections'?'/':'/exhibition'}>{location.pathname==='/reflections'?'RETURN TO HOME ↗':'NEXT — EXPLORE ↗'}</Link></div></aside><footer className="foot"><div className="wrap foot-in"><div><div className="eyebrow gold">SM5335 · MEDIA ARCHAEOLOGY</div><h2>The Feed We Didn’t Choose.</h2><p>Digital exhibition interface. Interpretive panels are identified as such; archival imagery is not represented as authentic where no specific source image has been verified.</p></div><Link className="backtop" to="/">BACK TO THE BEGINNING ↑</Link></div></footer></>}
+function Home(){const opening=researchChapters.find(c=>c.id==='opening');return <><section className="hero" id="home"><div className="wrap hero-main"><div className="hero-copy"><div className="eyebrow gold">SM5335 / MEDIA ARCHAEOLOGY</div><h1>The Feed<br/>We <i>Didn’t</i><br/>Choose.</h1><p className="hero-sub">A research-led exhibition on the histories of information distribution—from handwritten pages and shared news to RSS, Google Reader, and platform-curated feeds.</p><div className="hero-action"><Link className="btn-strong" to="/exhibition">ENTER THE EXHIBITION <span className="arrow">↗</span></Link><a className="btn-subtle" href="#opening">READ THE OPENING ↓</a></div></div><div className="hero-visual" role="img" aria-label="Interpretive illustration of manuscript, RSS and algorithmic feed systems"><svg className="hero-poster" viewBox="0 0 750 680" aria-hidden="true"><rect fill="#1b211e" width="750" height="680"/><circle cx="480" cy="330" fill="none" r="246" stroke="#ad8f67" strokeOpacity=".3"/><rect x="135" y="100" width="307" height="436" fill="#e6d6b7" transform="rotate(-9 172 210)"/><text x="287" y="310" fill="#6a4633" fontFamily="Georgia" fontSize="72" textAnchor="middle" transform="rotate(-9 172 210)">A</text><rect x="344" y="185" width="306" height="330" fill="#313c35" transform="rotate(7 150 167)"/><text x="490" y="350" fill="#c9a876" fontFamily="monospace" fontSize="20" textAnchor="middle">&lt;rss /&gt;</text><rect x="438" y="430" width="267" height="208" fill="#e6e2d5" transform="rotate(-5 128 99)"/><text x="570" y="540" fill="#282e26" fontFamily="Arial" fontSize="16" textAnchor="middle">YOUR FEED</text></svg></div></div><div className="wrap hero-bottom"><span>OPENING → SIX CHAPTERS → EXPERIMENTS → REFLECTIONS</span><span>SCROLL TO EXPLORE ↓</span></div></section><section className="opening" id="opening"><div className="wrap opening-grid"><div><div className="eyebrow earth">00 / OPENING</div><h2>Who Chooses<br/>What We See?</h2></div><div className="opening-text">{opening?.paragraphs?.slice(0,2).map((p,i)=><p className={i?'secondary':''} key={i}>{p}</p>)}<div className="opening-meta"><span>RESEARCH METHOD / MEDIA ARCHAEOLOGY</span><span>INTERPRETIVE VISUALS NOT HISTORICAL FACSIMILES</span></div></div></div></section></>}
+function Reflections(){const chapters=researchChapters.filter(c=>c.id==='chapter-7'||c.id==='conclusion');return <section className="reflection"><div className="wrap"><div className="chapter-heading"><div><div className="eyebrow earth">03 / REFLECTIONS · CHAPTER 07 &amp; CONCLUSION</div><h2>Beyond the feed.</h2></div><aside>The concluding arguments return to how control over circulation is redistributed.</aside></div><div className="reflection-grid">{chapters.map((c,i)=><article className="essay-block" key={c.id}><div className="section-number">{i?'CONCLUSION / FUTURES':'CHAPTER 07 / SYNTHESIS'}</div><h3>{c.title}</h3>{c.paragraphs?.slice(0,2).map((p,j)=><p key={j}>{p}</p>)}<p className="essay-signoff">{i?'What other arrangements of the feed could still be imagined?':'From circulation to visibility; from technical possibility to institutional choice.'}</p></article>)}</div><div className="dimension-heading"><div><div className="eyebrow earth">COMPARATIVE FRAMEWORK / CHAPTER 05 &amp; 07</div><h3>Four questions of control</h3></div><span className="hint">ANALYTICAL DIMENSIONS, NOT MEASURED SCORES</span></div><div className="dimension-grid">{[['Source control','Who chooses which publishers can enter the feed?'],['Ranking control','Who determines the order in which items appear?'],['Infrastructure','Who operates channels, readers and platforms?'],['Portability','What can people take with them if a service closes?']].map(([title,text],i)=><div className="dimension" key={title}><span className="eyebrow earth">0{i+1}</span><b>{title}</b><p>{text}</p></div>)}</div></div></section>}
+function Research(){return <section className="section"><div className="wrap"><div className="chapter-heading"><div><div className="eyebrow earth">RESEARCH TEXT / COMPLETE DRAFT</div><h2>The essay.</h2></div><aside>Author-supplied research content and source links.</aside></div>{researchChapters.map(c=><article className="essay-block" id={'chapter-'+c.id} key={c.id}><div className="section-number">{c.title}</div>{c.paragraphs?.map((p,i)=><p key={i}>{p}</p>)}</article>)}<div className="references"><h2>References</h2>{references.map(r=><p key={r.id}>{r.citation} <a href={r.url} target="_blank" rel="noreferrer">↗</a></p>)}</div></div></section>}
+function App(){return <Routes><Route element={<Layout/>}><Route path="/" element={<Home/>}/><Route path="/exhibition" element={<ZipExhibition/>}/><Route path="/lab" element={<ZipLab/>}/><Route path="/reflections" element={<Reflections/>}/><Route path="/archive" element={<Archive onOpen={()=>{}}/>}/><Route path="/timeline" element={<Timeline/>}/><Route path="/distribution-paths" element={<DistributionPaths/>}/><Route path="/research" element={<Research/>}/><Route path="*" element={<Home/>}/></Route></Routes>}
+export default App;
