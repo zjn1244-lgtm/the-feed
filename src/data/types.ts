@@ -15,4 +15,4 @@ export interface ResearchChapter {
  mediaCaptions?: string[];
  citations?: string[];
 }
-export interface Reference { id: string; author: string; title: string; year: string; url: string; status: 'pending' | 'verified'; citation?: string }
+export interface Reference { id: string; author: string; title: string; year: string; url: string; status: 'pending' | 'verified'; citation?: string; category?: 'academic' | 'media' }

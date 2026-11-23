@@ -21,3 +21,53 @@
 .page-switcher a:hover{background:#c6a16e;color:#141c17}
 .page-switcher .eyebrow{color:#c6a16e}
 @media(max-width:600px){.page-switcher .wrap{align-items:stretch;flex-direction:column}.page-switcher a{justify-content:center}}
+
+/* Source-led museum records and the independent references index. */
+.exhibition-chapter{margin-top:84px;padding-top:34px;border-top:1px solid #b8b0a0}
+.exhibition-chapter h3{font:400 clamp(34px,4vw,56px)/1.06 var(--fser);max-width:850px;margin:20px 0 30px}
+.exhibition-chapter>p{font-size:14px;line-height:2;color:#4f554d;max-width:900px;margin:0 0 20px}
+.citation-link{color:#744e45;text-decoration:underline;text-decoration-color:#b49a70;text-underline-offset:3px}
+.citation-link:hover{color:#3f2627}
+.museum-object-list{display:grid;gap:0;margin-top:28px;border-top:1px solid #a9a394}
+.museum-object{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.88fr);gap:clamp(24px,5vw,68px);align-items:center;padding:32px 0;border-bottom:1px solid #bdb5a6;min-width:0}
+.museum-object-visual{min-width:0;display:flex;align-items:center;justify-content:center;background:#ded8ca;overflow:hidden;min-height:110px}
+.museum-object-visual img{display:block;width:auto;max-width:100%;height:auto;max-height:640px;object-fit:contain}
+.museum-object-visual iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#111}
+.museum-object-visual iframe.interactive-source{aspect-ratio:auto;height:680px;background:#fff}
+.museum-object-visual audio{width:calc(100% - 36px);margin:24px 18px}
+.museum-source-note{padding:28px;width:100%;color:#4c514a;font-size:12px;line-height:1.8}
+.museum-source-note p{max-width:580px}
+.museum-object-copy{min-width:0}
+.museum-object-meta{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:#8d7147;font-size:10px;letter-spacing:.11em;text-transform:uppercase}
+.museum-object-copy h4{font:400 clamp(25px,3vw,38px)/1.15 var(--fser);margin:14px 0 16px;color:#292a25}
+.museum-caption{font:400 16px/1.65 var(--fser);color:#44463f;margin:0 0 13px}
+.museum-credit,.museum-rights{font-size:11px;line-height:1.7;color:#686a61;margin:7px 0}
+.museum-source-link,.pending-media-note a{display:inline-block;margin-top:12px;color:#6b3a3e;font-size:10px;letter-spacing:.1em;text-decoration:underline;text-underline-offset:4px}
+.pending-media-note{border-top:1px solid #657064;margin-top:40px;padding-top:24px;max-width:720px;color:#cbd0c5}
+.pending-media-note p{font-size:12px;line-height:1.8}
+.pending-media-note a{color:#d9bd8e}
+.lab-media{border-top:1px solid #536053;margin-top:32px;padding-top:24px}
+.lab-media .museum-object-list{margin-top:5px}
+.lab-media .museum-object{grid-template-columns:minmax(0,1fr) minmax(220px,.8fr);gap:24px}
+.lab-media .museum-object-visual{background:#1a211c}
+.lab-media .museum-object-copy h4{color:#f0eee4}
+.lab-media .museum-caption{color:#d1d3c9}
+.lab-media .museum-credit,.lab-media .museum-rights{color:#aab3a6}
+.lab-media .museum-object-meta{color:#d0b17e}
+.lab-media .museum-source-link{color:#e1c18a}
+.lab-media .museum-source-note{color:#d2d5ca}
+.references-page{background:#ebe7dc;padding:90px 0 110px;min-height:65vh}
+.references-page .chapter-heading{border-bottom:1px solid #bcb4a5;padding-bottom:40px}
+.references-page .chapter-heading h2{font:400 clamp(56px,8vw,104px)/.95 var(--fser);letter-spacing:-.04em;margin:20px 0 0}
+.references-count{margin:27px 0 52px;font-size:10px;letter-spacing:.15em;color:#817454}
+.reference-group{margin-top:50px}
+.reference-group h3{font:400 clamp(32px,4vw,48px)/1.1 var(--fser);margin:13px 0 28px;color:#292a25}
+.reference-list{list-style:none;padding:0;margin:0;border-top:1px solid #b8b0a0;counter-reset:references}
+.reference-list li{counter-increment:references;scroll-margin-top:30px;padding:22px 0 24px 2.2em;border-bottom:1px solid #c8c1b4;position:relative}
+.reference-list li:before{content:counter(references,decimal-leading-zero);position:absolute;left:0;top:27px;font-size:10px;color:#91754a;letter-spacing:.08em}
+.reference-list li p{font-size:13px;line-height:1.85;color:#484a43;margin:0 0 6px;text-indent:-2.2em;padding-left:2.2em;overflow-wrap:anywhere}
+.reference-list li>a{font-size:9px;color:#75454a;letter-spacing:.1em;text-decoration:underline;text-underline-offset:3px}
+.reference-editorial-note{margin-top:48px;border-left:2px solid #b49a70;padding-left:18px;max-width:700px;color:#68695f;font-size:12px;line-height:1.8}
+.nav-links{overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+@media(max-width:760px){.museum-object,.lab-media .museum-object{grid-template-columns:1fr;gap:20px}.museum-object-visual img{max-height:520px}.museum-object-visual iframe.interactive-source{height:560px}.exhibition-chapter{margin-top:58px}.references-page{padding:66px 0 80px}}
