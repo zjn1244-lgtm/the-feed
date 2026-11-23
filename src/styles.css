@@ -71,3 +71,36 @@
 .nav-links{overflow-x:auto;scrollbar-width:none}
 .nav-links::-webkit-scrollbar{display:none}
 @media(max-width:760px){.museum-object,.lab-media .museum-object{grid-template-columns:1fr;gap:20px}.museum-object-visual img{max-height:520px}.museum-object-visual iframe.interactive-source{height:560px}.exhibition-chapter{margin-top:58px}.references-page{padding:66px 0 80px}}
+
+/* Editorial hierarchy: sharpen the reading order without changing the essay or its imagery. */
+.hero-main{grid-template-columns:minmax(0,.96fr) minmax(0,1.04fr);min-height:620px}
+.hero-copy{padding-top:84px}
+.hero h1{font-size:clamp(68px,7.55vw,122px);line-height:.91;letter-spacing:-.048em;max-width:710px;margin:31px -18px 25px 0}
+.hero-sub{font-size:15px;line-height:1.82;max-width:430px}
+.hero-action{margin-top:29px}
+.hero-bottom{font-size:9px;letter-spacing:.11em}
+.opening{padding-block:86px 94px}
+.opening-grid{grid-template-columns:minmax(220px,.72fr) minmax(0,1.6fr);gap:8%}
+.opening h2{font-size:clamp(43px,4.65vw,70px);line-height:1.02}
+.opening-text{padding-top:24px}
+.chapter-heading{padding-bottom:35px;gap:48px}
+.chapter-heading h2{font-size:clamp(48px,5.6vw,82px);line-height:1.02}
+.chapter-heading aside{font-size:14px;line-height:1.75;max-width:340px}
+.museum-layout{margin-top:46px;gap:5%}
+.stage-item{padding-block:22px}
+.stage-item.active{box-shadow:inset 3px 0 0 var(--gold)}
+.hover-panel{min-height:430px;padding:34px}
+.objects{margin-top:76px}
+.objects-head h3{font-size:42px}
+.exhibition-chapter{max-width:1040px;margin-top:72px}
+.exhibition-chapter>p{font-size:15px;line-height:1.88}
+.exhibition-chapter>p:first-of-type{font:400 clamp(19px,2vw,24px)/1.6 var(--fser);color:#373a34}
+.lab-heading{padding-bottom:36px}
+.lab-heading h2{font-size:clamp(60px,6.3vw,96px)}
+.lab-heading p{font-size:14px;line-height:1.8}
+.references-page .chapter-heading aside{max-width:350px}
+.reference-group{margin-top:44px}
+.reference-list li{padding-block:19px 21px}
+.reference-list li p{font-size:14px;line-height:1.75;max-width:920px}
+@media(max-width:760px){.hero-main{grid-template-columns:1fr;min-height:0}.hero-copy{padding-top:68px}.hero h1{font-size:clamp(68px,11vw,100px);max-width:640px;margin-right:0}.hero-visual{min-height:340px}.hero-poster{height:100%;width:100%;right:0}.opening-grid{grid-template-columns:1fr;gap:28px}.chapter-heading{padding-bottom:28px}.museum-layout{margin-top:34px}.exhibition-chapter{margin-top:58px}}
+@media(max-width:560px){.hero-copy{padding-top:58px}.hero h1{font-size:clamp(58px,13vw,78px);margin-top:27px}.hero-sub{font-size:13px;line-height:1.75}.hero-visual{min-height:300px;height:300px}.hero-poster{height:390px;top:-35px}.hero-bottom{font-size:8px}.opening{padding-block:64px 72px}.opening h2{font-size:clamp(44px,12vw,56px)}.chapter-heading h2{font-size:clamp(48px,13vw,62px)}.chapter-heading aside{font-size:13px;line-height:1.7}.hover-panel{padding:23px}.objects{margin-top:54px}.objects-head h3{font-size:37px}.exhibition-chapter>p{font-size:14px;line-height:1.8}.lab-heading h2{font-size:clamp(62px,17vw,78px)}.reference-list li p{font-size:13px}}
