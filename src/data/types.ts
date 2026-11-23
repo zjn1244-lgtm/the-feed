@@ -5,5 +5,14 @@ export interface HistoricalEvent { id: string; stageId: StageId; title: string; 
 export interface HistoricalConnection { from: StageId; to: StageId; kind: 'documented-inheritance' | 'conceptual-comparison'; label: string; referenceIds: string[] }
 export interface DistributionPath { stageId: StageId; nodes: { role: string; description: string }[]; note: string }
 export interface FeedItem { id: string; title: string; source: string; topic: string; publishedAt: string; editorialPriority: number; relevance: number; excerpt: string }
-export interface ResearchChapter { id: string; title: string; status: 'pending' | 'draft' | 'reviewed'; body: string; referenceIds: string[] }
-export interface Reference { id: string; author: string; title: string; year: string; url: string; status: 'pending' | 'verified' }
+export interface ResearchChapter {
+ id: string;
+ title: string;
+ status: 'pending' | 'draft' | 'reviewed';
+ body: string;
+ referenceIds: string[];
+ paragraphs?: string[];
+ mediaCaptions?: string[];
+ citations?: string[];
+}
+export interface Reference { id: string; author: string; title: string; year: string; url: string; status: 'pending' | 'verified'; citation?: string }
